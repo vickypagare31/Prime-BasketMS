@@ -11,6 +11,8 @@ import lombok.Setter;
 @Setter
 public class UserResponseDto {
 
+    private String fullName;
+
     private String userName;
 
     private String email;

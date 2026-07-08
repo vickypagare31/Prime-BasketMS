@@ -3,6 +3,7 @@ package com.primebasket.User.service.impl;
 import com.primebasket.User.dto.UserRequestDto;
 import com.primebasket.User.dto.UserResponseDto;
 import com.primebasket.User.entity.User;
+import com.primebasket.User.exception.UserNotFoundException;
 import com.primebasket.User.mapper.UserMapper;
 import com.primebasket.User.repository.UserRepository;
 import com.primebasket.User.service.UserService;
@@ -10,6 +11,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -43,5 +46,14 @@ public class UserServiceImpl implements UserService {
         Pageable pageable= PageRequest.of(page, size);
         Page<User>pageList=userRepository.findAll(pageable);
         return pageList.map(UserMapper::entityToDto);
+    }
+
+    @Override
+    public UserResponseDto getUserById(Long userId) {
+        User user=userRepository.findById(userId)
+                .orElseThrow(()->new UserNotFoundException("User not found with Id: "+userId));
+        return UserMapper.entityToDto(user);
+
+
     }
 }

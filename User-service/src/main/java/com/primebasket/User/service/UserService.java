@@ -11,4 +11,6 @@ public interface UserService {
         void createUser(UserRequestDto userRequestDto);
 
         Page<UserResponseDto> getAllUsers(int page, int size);
+
+        UserResponseDto getUserById(Long userId);
 }

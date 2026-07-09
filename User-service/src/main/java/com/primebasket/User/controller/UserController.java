@@ -2,6 +2,7 @@ package com.primebasket.User.controller;
 
 import com.primebasket.User.dto.UserRequestDto;
 import com.primebasket.User.dto.UserResponseDto;
+import com.primebasket.User.entity.User;
 import com.primebasket.User.service.UserService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -29,5 +30,12 @@ public class UserController {
                                             @RequestParam(defaultValue = "5")int size){
         Page<UserResponseDto>userList=userService.getAllUsers(page,size);
         return ResponseEntity.status(HttpStatus.OK).body(userList);
+    }
+
+    @GetMapping("/{userId}")
+    public ResponseEntity<UserResponseDto>getUserById(@PathVariable Long userId){
+        UserResponseDto userResponseDto=userService.getUserById(userId);
+        return ResponseEntity.status(HttpStatus.OK).body(userResponseDto);
+
     }
 }

@@ -13,4 +13,8 @@ public interface UserService {
         Page<UserResponseDto> getAllUsers(int page, int size);
 
         UserResponseDto getUserById(Long userId);
+
+        UserResponseDto updateUserById(Long userId, UserResponseDto userResponseDto);
+
+        void deleteUserById(Long userId);
 }

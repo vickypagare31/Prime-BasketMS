@@ -56,4 +56,25 @@ public class UserServiceImpl implements UserService {
 
 
     }
+
+    @Override
+    public UserResponseDto updateUserById(Long userId, UserResponseDto userResponseDto) {
+        User user=userRepository.findById(userId)
+                .orElseThrow(()->new UserNotFoundException("User not found with this userId: "+userId));
+
+        user.setFullName(userResponseDto.getFullName());
+        user.setUserName(userResponseDto.getUserName());
+        user.setEmail(userResponseDto.getEmail());
+        //user.setPassword(userRequestDto.getPassword());    will think how to change password?
+        user.setAddress(userResponseDto.getAddress());
+        user.setMobileNumber(userResponseDto.getMobileNumber());
+
+        User updatedUser=userRepository.save(user);
+        return UserMapper.entityToDto(updatedUser);
+    }
+
+    @Override
+    public void deleteUserById(Long userId) {
+
+    }
 }

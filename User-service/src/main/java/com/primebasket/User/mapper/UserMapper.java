@@ -1,9 +1,12 @@
 package com.primebasket.User.mapper;
 
-import com.primebasket.User.dto.UserRequestDto;
-import com.primebasket.User.dto.UserResponseDto;
+import com.primebasket.User.dto.*;
+import com.primebasket.User.entity.Address;
 import com.primebasket.User.entity.User;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class UserMapper {
@@ -18,11 +21,15 @@ public class UserMapper {
 
         UserResponseDto userResponseDto =new UserResponseDto();
 
-        userResponseDto.setFullName(user.getFullName());
-        userResponseDto.setUserName(user.getUserName());
+        userResponseDto.setFirstName(user.getFirstName());
+        userResponseDto.setLastName(user.getLastName());
         userResponseDto.setEmail(user.getEmail());
-        userResponseDto.setAddress(user.getAddress());
         userResponseDto.setMobileNumber(user.getMobileNumber());
+        userResponseDto.setRole(user.getRole());
+        userResponseDto.setActive(user.getIsActive());
+        userResponseDto.setEmailVerified(user.getEmailVerified());
+        userResponseDto.setCreateAt(user.getCreatedAt());
+        userResponseDto.setUpdatedAt(user.getUpdatedAt());
 
         return userResponseDto;
     }
@@ -36,13 +43,11 @@ public class UserMapper {
     public static User requestDtoToEnt(UserRequestDto requestDto){
 
         User user=new User();
-        user.setUserId(requestDto.getUserId());
-        user.setFullName(requestDto.getFullName());
-        user.setUserName(requestDto.getUserName());
+        user.setFirstName(requestDto.getFirstName());
+        user.setLastName(requestDto.getLastName());
         user.setEmail(requestDto.getEmail());
-        user.setPassword(requestDto.getPassword());
-        user.setAddress(requestDto.getAddress());
         user.setMobileNumber(requestDto.getMobileNumber());
+        user.setPassword(requestDto.getPassword());
 
         return user;
 

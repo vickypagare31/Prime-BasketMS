@@ -1,28 +1,54 @@
 package com.primebasket.User.controller;
 
-import com.primebasket.User.dto.UserRequestDto;
-import com.primebasket.User.dto.UserResponseDto;
+import com.primebasket.User.dto.*;
 import com.primebasket.User.entity.User;
+import com.primebasket.User.service.AddressService;
 import com.primebasket.User.service.UserService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/prime-basket/user")
+@RequiredArgsConstructor
+@RequestMapping("/api/v1/users")
 public class UserController {
 
     private final UserService userService;
+    private final AddressService addressService;
 
-    public UserController(UserService userService) {
-        this.userService = userService;
+
+    @PostMapping("/register")
+    public ResponseEntity<UserResponseDto>registerUser(@Valid @RequestBody UserRequestDto userRequestDto){
+    UserResponseDto response=userService.registerUser(userRequestDto);
+    return  ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<String>createNewUser(@RequestBody UserRequestDto userRequestDto){
-    userService.createUser(userRequestDto);
-    return  new ResponseEntity<>("User Created Successfully",HttpStatus.CREATED);
+    @PostMapping("/{userId}/addresses")
+    public ResponseEntity<AddressResponseDto>addAddress(@PathVariable Long userId, @RequestBody AddressRequestDto addressRequestDto){
+        AddressResponseDto response=addressService.addAddress(userId, addressRequestDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @GetMapping("/{userId}/addresses")
+    public ResponseEntity<UserAddressResponseDto>getUserById(@PathVariable Long userId){
+        UserAddressResponseDto userAddressResponseDto=userService.getUserById(userId);
+        return ResponseEntity.status(HttpStatus.OK).body(userAddressResponseDto);
+
+    }
+
+    @PutMapping("/{userId}")
+    public ResponseEntity<UserUpdateDto>updateUserById(@PathVariable Long userId, @Valid @RequestBody UserUpdateDto userUpdateDto){
+        UserUpdateDto updatedUser=userService.updateUserById(userId,userUpdateDto);
+        return ResponseEntity.status(HttpStatus.OK).body(updatedUser);
+    }
+
+    @DeleteMapping("/{userId}")
+    public ResponseEntity<String>deleteUserById(@PathVariable Long userId){
+        userService.deleteUserById(userId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @GetMapping("/getUsers")
@@ -32,15 +58,6 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(userList);
     }
 
-    @GetMapping("/{userId}")
-    public ResponseEntity<UserResponseDto>getUserById(@PathVariable Long userId){
-        UserResponseDto userResponseDto=userService.getUserById(userId);
-        return ResponseEntity.status(HttpStatus.OK).body(userResponseDto);
 
-    }
-    @PutMapping("/{userId}")
-    public ResponseEntity<UserResponseDto>updateUserById(@PathVariable Long userId, @RequestBody UserResponseDto userResponseDto){
-        UserResponseDto updatedUser=userService.updateUserById(userId,userResponseDto);
-        return ResponseEntity.status(HttpStatus.OK).body(updatedUser);
-    }
+
 }

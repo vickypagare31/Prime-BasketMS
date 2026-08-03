@@ -9,15 +9,19 @@ import com.primebasket.product_service.mapper.ProductMapper;
 import com.primebasket.product_service.mapper.ProductUpdateMapper;
 import com.primebasket.product_service.repository.ProductRepository;
 import com.primebasket.product_service.service.ProductService;
+import com.primebasket.product_service.specification.ProductSpecification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
+import java.util.Set;
 
 
 @Service
@@ -67,12 +71,19 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public PageResponse<ProductResponseDto> getAllProducts(int page, int size) {
-        Pageable pageable= PageRequest.of(page, size);
-        Page<Product>pageList=productRepository.findAllByIsActiveTrue(pageable);
+    public PageResponse<ProductResponseDto> getAllProducts(int page, int size, Sort sort, ProductFilterDto filterDto) {
+        Pageable pageable= PageRequest.of(page, size, sort);
+        if(size>100){
+            throw new InvalidPageSizeException("Maximum page size is 100");
+        }
+        Specification<Product>specification= ProductSpecification.getProducts(filterDto);
+
+        Page<Product>pageList=productRepository.findAll(specification,pageable);
         Page<ProductResponseDto>dtoPage= pageList.map(ProductMapper::entToDto);
         return PageResponseMapper.fromPage(dtoPage);
     }
+
+
 
     @Override
     public ProductUpdateResponseDto updateProduct(Long productId, ProductUpdateRequestDto requestDto) {

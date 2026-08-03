@@ -1,13 +1,18 @@
 package com.primebasket.product_service.controller;
 
 import com.primebasket.product_service.dto.*;
+import com.primebasket.product_service.exception.InvalidSortFieldException;
 import com.primebasket.product_service.service.ProductService;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.math.BigDecimal;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/v1/products")
@@ -15,6 +20,14 @@ import org.springframework.web.bind.annotation.*;
 public class ProductController {
 
     private final ProductService productService;
+
+    //For Validation
+    private static final Set<String> ALLOWED_SORT_FIELDS=Set.of(
+            "productName",
+            "price",
+            "brand",
+            "createdAt"
+    );
 
     @PostMapping()
     public ResponseEntity<ProductResponseDto>addProducts(@RequestBody ProductRequestDto requestDto){
@@ -35,9 +48,32 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<PageResponse<ProductResponseDto>>getAllProducts(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size){
-        PageResponse<ProductResponseDto>response=productService.getAllProducts(page, size);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+    public ResponseEntity<PageResponse<ProductResponseDto>>getAllProducts(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size,
+                                                                          @RequestParam(required = false, defaultValue = "createdAt") String sortBy,
+                                                                          @RequestParam(required = false, defaultValue = "DESC") String sortDir,
+                                                                          @RequestParam(required = false) String brand,
+                                                                          @RequestParam(required = false)BigDecimal minPrice,
+                                                                          @RequestParam(required = false)BigDecimal maxPrice){
+        if (!ALLOWED_SORT_FIELDS.contains(sortBy)){
+            throw new InvalidSortFieldException("Invalid sort filed:"+sortBy);
+        }
+        Sort sort;
+        if(!sortDir.equalsIgnoreCase("ASC") && !sortDir.equalsIgnoreCase("DESC")){
+            throw new InvalidSortFieldException("Sort Direction must be ASC or DESC:");
+        }
+        if(sortDir.equalsIgnoreCase("ASC")){
+            sort=Sort.by(sortBy).ascending();
+        }else {
+            sort= Sort.by(sortBy).descending();
+        }
+
+        ProductFilterDto filterDto = new ProductFilterDto();
+        filterDto.setBrand(brand);
+        filterDto.setMinPrice(minPrice);
+        filterDto.setMaxPrice(maxPrice);
+
+        PageResponse<ProductResponseDto>response=productService.getAllProducts(page, size,sort,filterDto);
+        return ResponseEntity.ok(response);
     }
 
     @PatchMapping("/{productId}")

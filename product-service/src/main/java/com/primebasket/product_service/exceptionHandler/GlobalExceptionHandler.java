@@ -4,6 +4,7 @@ import com.primebasket.product_service.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
@@ -34,6 +35,21 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ResourceNullException.class)
     public ResponseEntity<String>handleResourceNullException(Exception ex){
+        return new ResponseEntity<>(ex.getMessage(),HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(InvalidSortFieldException.class)
+    public ResponseEntity<String>handleInvalidSortFieldException(Exception ex){
+        return new ResponseEntity<>(ex.getMessage(),HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(InvalidSortDirectionException.class)
+    public ResponseEntity<String>handleInvalidSortDirectionException(Exception ex){
+        return new ResponseEntity<>(ex.getMessage(),HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(InvalidPageSizeException.class)
+    public ResponseEntity<String>handleInvalidPageSizeException(Exception ex){
         return new ResponseEntity<>(ex.getMessage(),HttpStatus.BAD_REQUEST);
     }
 }

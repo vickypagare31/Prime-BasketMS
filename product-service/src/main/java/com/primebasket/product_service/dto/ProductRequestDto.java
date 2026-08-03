@@ -29,6 +29,5 @@ public class ProductRequestDto {
     @NotBlank(message = "Product sku is mandatory")
     private String sku;
 
-    private ProductStatus status;
 
 }

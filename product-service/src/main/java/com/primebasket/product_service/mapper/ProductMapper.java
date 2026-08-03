@@ -34,7 +34,7 @@ public class ProductMapper {
         product.setPrice(requestDto.getPrice());
         product.setBrand(requestDto.getBrand());
         product.setSku(requestDto.getSku());
-        product.setStatus(requestDto.getStatus());
+        //product.setStatus(requestDto.getStatus());
 
         return product;
     }

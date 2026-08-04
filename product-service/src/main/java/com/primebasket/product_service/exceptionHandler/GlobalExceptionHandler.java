@@ -52,4 +52,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String>handleInvalidPageSizeException(Exception ex){
         return new ResponseEntity<>(ex.getMessage(),HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(InvalidPriceRangeException.class)
+    public ResponseEntity<String>handleInvalidPriceRangeException(Exception ex){
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
 }

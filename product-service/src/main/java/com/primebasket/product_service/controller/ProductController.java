@@ -1,6 +1,7 @@
 package com.primebasket.product_service.controller;
 
 import com.primebasket.product_service.dto.*;
+import com.primebasket.product_service.exception.InvalidPriceRangeException;
 import com.primebasket.product_service.exception.InvalidSortFieldException;
 import com.primebasket.product_service.service.ProductService;
 import jakarta.annotation.PostConstruct;
@@ -71,6 +72,17 @@ public class ProductController {
         filterDto.setBrand(brand);
         filterDto.setMinPrice(minPrice);
         filterDto.setMaxPrice(maxPrice);
+        /*
+            for BigDecimal java provides features like compareTo method where
+            -1 left smaller than right
+             0 Both are equal
+             1 left greater than right
+             So below code minPrice.compareTo(maxprice)>0 means it check for is minPrice greater than maxPrice
+             if yes it return true and loop will be executed.
+         */
+        if(minPrice!=null && maxPrice!=null && minPrice.compareTo(maxPrice)>0){
+            throw new InvalidPriceRangeException("Minimum price should not greater than Maximum price");
+        }
 
         PageResponse<ProductResponseDto>response=productService.getAllProducts(page, size,sort,filterDto);
         return ResponseEntity.ok(response);

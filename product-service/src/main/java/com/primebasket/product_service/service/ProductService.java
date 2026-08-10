@@ -1,8 +1,7 @@
 package com.primebasket.product_service.service;
 
+import com.primebasket.common.dto.PageResponse;
 import com.primebasket.product_service.dto.*;
-import com.primebasket.product_service.entity.Product;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 
 public interface ProductService {

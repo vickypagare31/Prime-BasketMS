@@ -2,6 +2,7 @@ package com.primebasket.product_service.entity;
 
 import com.primebasket.product_service.enums.ProductStatus;
 import jakarta.persistence.*;
+import jdk.jfr.Category;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -48,5 +49,8 @@ public class Product {
     @LastModifiedDate
     @Column(nullable = false)
     private LocalDateTime updatedAt;
+
+    @Column(name = "category_id", nullable = false)
+    private Long categoryId;
 
 }

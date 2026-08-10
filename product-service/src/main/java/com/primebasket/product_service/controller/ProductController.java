@@ -1,12 +1,11 @@
 package com.primebasket.product_service.controller;
 
+import com.primebasket.common.dto.PageResponse;
 import com.primebasket.product_service.dto.*;
 import com.primebasket.product_service.exception.InvalidPriceRangeException;
 import com.primebasket.product_service.exception.InvalidSortFieldException;
 import com.primebasket.product_service.service.ProductService;
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

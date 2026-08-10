@@ -1,5 +1,6 @@
 package com.primebasket.product_service.service.impl;
 
+import com.primebasket.common.dto.PageResponse;
 import com.primebasket.product_service.dto.*;
 import com.primebasket.product_service.entity.Product;
 import com.primebasket.product_service.enums.ProductStatus;
@@ -21,7 +22,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
-import java.util.Set;
 
 
 @Service

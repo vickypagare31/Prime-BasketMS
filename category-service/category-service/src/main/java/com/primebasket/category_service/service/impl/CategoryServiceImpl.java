@@ -9,14 +9,18 @@ import com.primebasket.category_service.repository.CategoryRepository;
 import com.primebasket.category_service.service.CategoryService;
 import com.primebasket.common.dto.CommonDtoMapper;
 import com.primebasket.common.dto.PageResponse;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
@@ -142,12 +146,29 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public void deleteCategory(Long categoryId) {
 
-        Category category=categoryRepository.findByCategoryIdAndIsActiveTrue(categoryId)
-                .orElseThrow(()->new CategoryAlreadyDeactivatedException("Category already deactivated"));
+        Category category=categoryRepository.findById(categoryId)
+                        .orElseThrow(()->new ResourceNotFoundException("Category not found for this Id: "+categoryId));
+
+
+        if(!Boolean.TRUE.equals(category.getIsActive())){
+            throw new CategoryAlreadyDeactivatedException("Category already deactivated");
+        }
 
         category.setIsActive(false);
+        deactivateCategoryHierarchy(category);
         categoryRepository.save(category);
 
     }
+
+    private void deactivateCategoryHierarchy(Category category) {
+        category.setIsActive(false);
+
+        if(category.getSubCategories()!=null){
+            for(Category child:category.getSubCategories()){
+                deactivateCategoryHierarchy(child);
+            }
+        }
+    }
+
 }
 

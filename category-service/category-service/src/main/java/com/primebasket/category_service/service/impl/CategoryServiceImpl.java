@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -77,9 +78,9 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public PageResponse<CategoryResponseDto> getAllCategory(int pageNo, int pageSize) {
+    public PageResponse<CategoryResponseDto> getAllCategory(int pageNo, int pageSize, Sort sort) {
 
-        Pageable pageable= PageRequest.of(pageNo, pageSize);
+        Pageable pageable= PageRequest.of(pageNo, pageSize,sort);
         if(pageSize>100){
             throw new InvalidPageSizeException("Maximum page size should be 100");
         }

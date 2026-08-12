@@ -9,6 +9,16 @@
         <outputRelativeToContentRoot value="true" />
         <module name="common-library" />
       </profile>
+      <profile name="Annotation profile for User" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
+        </processorPath>
+        <module name="User" />
+      </profile>
       <profile name="Annotation profile for product-service" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
@@ -17,8 +27,8 @@
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
         </processorPath>
         <module name="product-service" />
+        <module name="inventory-service" />
         <module name="category-service" />
-        <module name="User" />
       </profile>
     </annotationProcessing>
   </component>
@@ -26,6 +36,7 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="User" options="-parameters" />
       <module name="category-service" options="-parameters" />
+      <module name="inventory-service" options="-parameters" />
       <module name="product-service" options="-parameters" />
     </option>
   </component>

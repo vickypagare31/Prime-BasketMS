@@ -38,4 +38,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String>handleCategoryAlreadyDeactivatedException(Exception ex){
         return new ResponseEntity<>(ex.getMessage(),HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(InvalidSortFieldException.class)
+    public ResponseEntity<String>handleInvalidSortFieldException(Exception ex){
+        return new ResponseEntity<>(ex.getMessage(),HttpStatus.BAD_REQUEST);
+    }
 }

@@ -24,11 +24,14 @@ public class Inventory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long inventoryId;
 
+    @Column(nullable = false, unique = true)
     private Long productId;
 
+    @Column(nullable = false)
     private Integer quantity;
 
-    private Integer reservedQuantity;
+    @Column(nullable = false)
+    private Integer reservedQuantity=0;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)

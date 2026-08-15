@@ -13,7 +13,6 @@ import lombok.Setter;
 @Setter
 public class InventoryRequestDto {
 
-    @NotNull
     private Long productId;
 
     @NotNull

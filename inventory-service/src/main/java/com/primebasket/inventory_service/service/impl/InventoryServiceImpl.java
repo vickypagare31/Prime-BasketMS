@@ -112,4 +112,26 @@ public class InventoryServiceImpl implements InventoryService {
         inventoryRepository.save(inventory);
         return InventoryMapper.entToDto(inventory);
     }
+
+    @Override
+    public InventoryResponseDto releaseReservedStock(Long productId, InventoryRequestDto requestDto) {
+
+        Inventory inventory=inventoryRepository.findByProductId(productId)
+                .orElseThrow(()->new ResourceNotFoundException("Inventory not found for this productId: "+productId));
+
+        if(requestDto.getQuantity()==null){
+            throw new ResourceNullException("Quantity should not be null");
+        }
+
+        if(requestDto.getQuantity()<=0){
+            throw new InvalidQuantityException("Quantity must be greater than 0");
+        }
+
+        if(requestDto.getQuantity()>inventory.getReservedQuantity()){
+            throw new InvalidQuantityException("Cannot release more than reserved quantity. "+"Reserved Quantity: "+inventory.getReservedQuantity());
+        }
+        inventory.setReservedQuantity(inventory.getReservedQuantity() - requestDto.getQuantity());
+        inventoryRepository.save(inventory);
+        return InventoryMapper.entToDto(inventory);
+    }
 }

@@ -14,4 +14,6 @@ public interface InventoryService {
     InventoryResponseDto deductStock(Long productId, InventoryRequestDto requestDto);
 
     InventoryResponseDto reserveStock(Long productId, InventoryRequestDto requestDto);
+
+    InventoryResponseDto releaseReservedStock(Long productId, InventoryRequestDto requestDto);
 }

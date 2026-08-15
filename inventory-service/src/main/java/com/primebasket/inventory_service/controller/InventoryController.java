@@ -48,4 +48,10 @@ public class InventoryController {
         InventoryResponseDto responseDto=inventoryService.reserveStock(productId, requestDto);
         return ResponseEntity.ok(responseDto);
     }
+
+    @PatchMapping("/{productId}/stock/release")
+    public ResponseEntity<InventoryResponseDto>releaseReservedStock(@PathVariable Long productId, @RequestBody InventoryRequestDto requestDto){
+        InventoryResponseDto responseDto=inventoryService.releaseReservedStock(productId, requestDto);
+        return ResponseEntity.ok(responseDto);
+    }
 }

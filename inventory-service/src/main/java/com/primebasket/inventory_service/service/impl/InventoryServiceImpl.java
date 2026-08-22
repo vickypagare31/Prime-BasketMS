@@ -2,6 +2,7 @@ package com.primebasket.inventory_service.service.impl;
 
 import com.primebasket.inventory_service.dto.InventoryRequestDto;
 import com.primebasket.inventory_service.dto.InventoryResponseDto;
+import com.primebasket.inventory_service.dto.InventoryUpdateResponseDto;
 import com.primebasket.inventory_service.entity.Inventory;
 import com.primebasket.inventory_service.exception.InvalidQuantityException;
 import com.primebasket.inventory_service.exception.InventoryAlreadyExistsException;
@@ -10,6 +11,7 @@ import com.primebasket.inventory_service.exception.ResourceNullException;
 import com.primebasket.inventory_service.mapper.InventoryMapper;
 import com.primebasket.inventory_service.repository.InventoryRepository;
 import com.primebasket.inventory_service.service.InventoryService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -45,7 +47,7 @@ public class InventoryServiceImpl implements InventoryService {
     }
 
     @Override
-    public InventoryResponseDto updateStock(Long productId, InventoryRequestDto requestDto) {
+    public InventoryUpdateResponseDto updateStock(Long productId, InventoryRequestDto requestDto) {
 
         Inventory inventory=inventoryRepository.findByProductId(productId)
                 .orElseThrow(()->new ResourceNotFoundException(
@@ -60,11 +62,12 @@ public class InventoryServiceImpl implements InventoryService {
 
         inventory.setQuantity(inventory.getQuantity() + requestDto.getQuantity());
         inventoryRepository.save(inventory);
-        return InventoryMapper.entToDto(inventory);
+        return InventoryMapper.entToUpdateDto(inventory);
     }
 
+    @Transactional
     @Override
-    public InventoryResponseDto deductStock(Long productId, InventoryRequestDto requestDto) {
+    public InventoryUpdateResponseDto deductStock(Long productId, InventoryRequestDto requestDto) {
 
         Inventory inventory=inventoryRepository.findByProductId(productId)
                 .orElseThrow(()->new ResourceNotFoundException("Inventory not found for this productId: "+productId));
@@ -80,11 +83,12 @@ public class InventoryServiceImpl implements InventoryService {
         }
         inventory.setQuantity(inventory.getQuantity()-requestDto.getQuantity());
         inventoryRepository.save(inventory);
-        return InventoryMapper.entToDto(inventory);
+        return InventoryMapper.entToUpdateDto(inventory);
     }
 
+    @Transactional
     @Override
-    public InventoryResponseDto reserveStock(Long productId, InventoryRequestDto requestDto) {
+    public InventoryUpdateResponseDto reserveStock(Long productId, InventoryRequestDto requestDto) {
 
         Inventory inventory=inventoryRepository.findByProductId(productId)
                 .orElseThrow(()->new ResourceNotFoundException("Inventory not found for this productId: "+productId));
@@ -110,11 +114,11 @@ public class InventoryServiceImpl implements InventoryService {
 
         inventory.setReservedQuantity(inventory.getReservedQuantity()+requestDto.getQuantity());
         inventoryRepository.save(inventory);
-        return InventoryMapper.entToDto(inventory);
+        return InventoryMapper.entToUpdateDto(inventory);
     }
 
     @Override
-    public InventoryResponseDto releaseReservedStock(Long productId, InventoryRequestDto requestDto) {
+    public InventoryUpdateResponseDto releaseReservedStock(Long productId, InventoryRequestDto requestDto) {
 
         Inventory inventory=inventoryRepository.findByProductId(productId)
                 .orElseThrow(()->new ResourceNotFoundException("Inventory not found for this productId: "+productId));
@@ -132,6 +136,31 @@ public class InventoryServiceImpl implements InventoryService {
         }
         inventory.setReservedQuantity(inventory.getReservedQuantity() - requestDto.getQuantity());
         inventoryRepository.save(inventory);
-        return InventoryMapper.entToDto(inventory);
+        return InventoryMapper.entToUpdateDto(inventory);
+    }
+
+    @Transactional
+    @Override
+    public InventoryUpdateResponseDto confirmReservedStock(Long productId, InventoryRequestDto requestDto) {
+
+        Inventory inventory=inventoryRepository.findByProductId(productId)
+                .orElseThrow(()->new ResourceNotFoundException("Inventory not found for this productId: "+productId));
+
+        if(requestDto.getQuantity()==null){
+            throw new ResourceNullException("Quantity should not be null");
+        }
+
+        if(requestDto.getQuantity()<=0){
+            throw new InvalidQuantityException("Quantity must be greater than 0");
+        }
+
+        if(requestDto.getQuantity()> inventory.getReservedQuantity()){
+            throw new InvalidQuantityException("Cannot confirmed more than reserved quantity. Reserved Quantity: "+inventory.getReservedQuantity());
+        }
+        inventory.setQuantity(inventory.getQuantity()- requestDto.getQuantity());
+        inventory.setReservedQuantity(inventory.getReservedQuantity()- requestDto.getQuantity());
+        inventoryRepository.save(inventory);
+
+        return InventoryMapper.entToUpdateDto(inventory);
     }
 }

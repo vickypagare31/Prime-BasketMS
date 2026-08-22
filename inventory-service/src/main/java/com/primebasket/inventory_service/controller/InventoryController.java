@@ -2,6 +2,7 @@ package com.primebasket.inventory_service.controller;
 
 import com.primebasket.inventory_service.dto.InventoryRequestDto;
 import com.primebasket.inventory_service.dto.InventoryResponseDto;
+import com.primebasket.inventory_service.dto.InventoryUpdateResponseDto;
 import com.primebasket.inventory_service.service.InventoryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -32,26 +33,32 @@ public class InventoryController {
     }
 
     @PatchMapping("/{productId}/stock")
-    public ResponseEntity<InventoryResponseDto>updateStock(@PathVariable Long productId, @RequestBody InventoryRequestDto requestDto){
-        InventoryResponseDto responseDto=inventoryService.updateStock(productId, requestDto);
+    public ResponseEntity<InventoryUpdateResponseDto>updateStock(@PathVariable Long productId, @RequestBody InventoryRequestDto requestDto){
+        InventoryUpdateResponseDto responseDto=inventoryService.updateStock(productId, requestDto);
         return ResponseEntity.ok(responseDto);
     }
 
     @PatchMapping("/{productId}/stock/reduce")
-    public ResponseEntity<InventoryResponseDto>deductStock(@PathVariable Long productId, @RequestBody InventoryRequestDto requestDto){
-        InventoryResponseDto responseDto=inventoryService.deductStock(productId, requestDto);
+    public ResponseEntity<InventoryUpdateResponseDto>deductStock(@PathVariable Long productId, @RequestBody InventoryRequestDto requestDto){
+        InventoryUpdateResponseDto responseDto=inventoryService.deductStock(productId, requestDto);
         return ResponseEntity.ok(responseDto);
     }
 
     @PatchMapping("/{productId}/stock/reserve")
-    public ResponseEntity<InventoryResponseDto>reserveStock(@PathVariable Long productId, @RequestBody InventoryRequestDto requestDto){
-        InventoryResponseDto responseDto=inventoryService.reserveStock(productId, requestDto);
+    public ResponseEntity<InventoryUpdateResponseDto>reserveStock(@PathVariable Long productId, @RequestBody InventoryRequestDto requestDto){
+        InventoryUpdateResponseDto responseDto=inventoryService.reserveStock(productId, requestDto);
         return ResponseEntity.ok(responseDto);
     }
 
     @PatchMapping("/{productId}/stock/release")
-    public ResponseEntity<InventoryResponseDto>releaseReservedStock(@PathVariable Long productId, @RequestBody InventoryRequestDto requestDto){
-        InventoryResponseDto responseDto=inventoryService.releaseReservedStock(productId, requestDto);
+    public ResponseEntity<InventoryUpdateResponseDto>releaseReservedStock(@PathVariable Long productId, @RequestBody InventoryRequestDto requestDto){
+        InventoryUpdateResponseDto responseDto=inventoryService.releaseReservedStock(productId, requestDto);
+        return ResponseEntity.ok(responseDto);
+    }
+
+    @PatchMapping("/{productId}/stock/confirm")
+    public ResponseEntity<InventoryUpdateResponseDto>confirmReservedStock(@PathVariable Long productId, @RequestBody InventoryRequestDto requestDto){
+        InventoryUpdateResponseDto responseDto=inventoryService.confirmReservedStock(productId, requestDto);
         return ResponseEntity.ok(responseDto);
     }
 }

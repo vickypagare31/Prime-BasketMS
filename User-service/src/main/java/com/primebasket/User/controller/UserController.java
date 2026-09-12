@@ -32,10 +32,17 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @GetMapping("/{userId}/addresses")
+    //Get User By User Id with address list
+    @GetMapping("/{userId}/address")
     public ResponseEntity<UserAddressResponseDto>getUserById(@PathVariable Long userId){
         UserAddressResponseDto userAddressResponseDto=userService.getUserById(userId);
         return ResponseEntity.status(HttpStatus.OK).body(userAddressResponseDto);
+
+    }
+    @GetMapping("/{userId}")
+    public ResponseEntity<UserResponseDto>fetchUserById(@PathVariable Long userId){
+        UserResponseDto userResponseDto=userService.fetchUserById(userId);
+        return ResponseEntity.status(HttpStatus.OK).body(userResponseDto);
 
     }
 

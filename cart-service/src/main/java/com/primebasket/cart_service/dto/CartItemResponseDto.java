@@ -19,7 +19,5 @@ public class CartItemResponseDto {
 
     private Integer quantity;
 
-    private LocalDateTime createdAt;
 
-    private LocalDateTime updateAt;
 }

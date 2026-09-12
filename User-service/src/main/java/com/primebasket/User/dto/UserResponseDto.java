@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 @Setter
 public class UserResponseDto {
 
+    private Long userId;
 
     private String firstName;
 

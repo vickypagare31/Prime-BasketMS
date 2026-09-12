@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -91,6 +92,12 @@ public class ProductController {
     public ResponseEntity<ProductUpdateResponseDto>updateProducts(@PathVariable Long productId, @RequestBody ProductUpdateRequestDto requestDto){
         ProductUpdateResponseDto response = productService.updateProduct(productId, requestDto);
         return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @PostMapping("/validate")
+    public ResponseEntity<List<ProductResponseDto>>validateProducts(@RequestBody Set<Long>productIds){
+
+            return ResponseEntity.ok(productService.getProductsByIds(productIds));
     }
 
 }

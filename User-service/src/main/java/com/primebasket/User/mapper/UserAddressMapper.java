@@ -1,6 +1,6 @@
 package com.primebasket.User.mapper;
 
-import com.primebasket.User.dto.AddressRequestDto;
+import com.primebasket.User.dto.AddressResponseDto;
 import com.primebasket.User.dto.UserAddressResponseDto;
 import com.primebasket.User.entity.Address;
 import com.primebasket.User.entity.User;
@@ -15,6 +15,7 @@ public class UserAddressMapper {
     public static UserAddressResponseDto entToDto(User user){
         UserAddressResponseDto requestDto=new UserAddressResponseDto();
 
+        requestDto.setUserId(user.getUserId());
         requestDto.setFirstName(user.getFirstName());
         requestDto.setLastName(user.getLastName());
         requestDto.setEmail(user.getEmail());
@@ -22,20 +23,24 @@ public class UserAddressMapper {
         requestDto.setActive(user.getIsActive());
         requestDto.setRole(user.getRole());
 
-        List<AddressRequestDto> addresses=new ArrayList<>();
+        List<AddressResponseDto> addresses=new ArrayList<>();
 
         for(Address address : user.getAddresses()){
-            AddressRequestDto addressRequestDto=new AddressRequestDto();
+            AddressResponseDto addressResponseDto=new AddressResponseDto();
 
-            addressRequestDto.setAddressLine(address.getAddressLine());
-            addressRequestDto.setCity(address.getCity());
-            addressRequestDto.setAddressType(address.getAddressType());
-            addressRequestDto.setStreet(address.getStreet());
-            addressRequestDto.setCountry(address.getCountry());
-            addressRequestDto.setLandmark(address.getLandmark());
-            addressRequestDto.setPostalCode(address.getPostalCode());
+            addressResponseDto.setAddressId(address.getAddressId());
+            addressResponseDto.setAddressLine(address.getAddressLine());
+            addressResponseDto.setStreet(address.getStreet());
+            addressResponseDto.setLandmark(address.getLandmark());
+            addressResponseDto.setState(address.getState());
+            addressResponseDto.setCity(address.getCity());
+            addressResponseDto.setCountry(address.getCountry());
+            addressResponseDto.setPostalCode(address.getPostalCode());
+            addressResponseDto.setAddressType(address.getAddressType());
+            addressResponseDto.setIsDefault(address.getIsDefault());
+            addressResponseDto.setUserId(user.getUserId());
 
-            addresses.add(addressRequestDto);
+            addresses.add(addressResponseDto);
         }
 
         requestDto.setAddressList(addresses);

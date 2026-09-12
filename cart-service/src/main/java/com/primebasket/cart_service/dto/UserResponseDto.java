@@ -1,18 +1,17 @@
-package com.primebasket.User.dto;
+package com.primebasket.cart_service.dto;
 
-import com.primebasket.User.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
+import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class UserAddressResponseDto {
+public class UserResponseDto {
 
     private Long userId;
 
@@ -28,5 +27,9 @@ public class UserAddressResponseDto {
 
     private Boolean active;
 
-    private List<AddressResponseDto> addressList;
+    private Boolean emailVerified;
+
+    private LocalDateTime createAt;
+
+    private LocalDateTime updatedAt;
 }

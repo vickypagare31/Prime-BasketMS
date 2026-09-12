@@ -28,8 +28,7 @@ public class CartMapper {
                 itemResponseDto.setCartItemId(cartItem.getCartItemId());
                 itemResponseDto.setProductId(cartItem.getProductId());
                 itemResponseDto.setQuantity(cartItem.getQuantity());
-                itemResponseDto.setCreatedAt(cartItem.getCreatedAt());
-                itemResponseDto.setUpdateAt(cartItem.getUpdatedAt());
+
                 itemResponseDtoList.add(itemResponseDto);
             }
         }

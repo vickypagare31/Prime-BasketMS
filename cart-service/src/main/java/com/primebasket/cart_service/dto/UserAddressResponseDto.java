@@ -1,6 +1,5 @@
-package com.primebasket.User.dto;
+package com.primebasket.cart_service.dto;
 
-import com.primebasket.User.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,8 +13,6 @@ import java.util.List;
 @Setter
 public class UserAddressResponseDto {
 
-    private Long userId;
-
     private String firstName;
 
     private String lastName;
@@ -28,5 +25,5 @@ public class UserAddressResponseDto {
 
     private Boolean active;
 
-    private List<AddressResponseDto> addressList;
+    private List<AddressResponseDto>addressList;
 }

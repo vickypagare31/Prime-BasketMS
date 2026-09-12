@@ -22,6 +22,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
+import java.util.List;
+import java.util.Set;
 
 
 @Service
@@ -144,5 +146,13 @@ public class ProductServiceImpl implements ProductService {
 
 
         return ProductUpdateMapper.entToDto(product);
+    }
+
+    @Override
+    public List<ProductResponseDto> getProductsByIds(Set<Long> productIds) {
+        return productRepository.findAllByProductIdInAndIsActiveTrue(productIds)
+                .stream()
+                .map(ProductMapper::entToDto)
+                .toList();
     }
 }

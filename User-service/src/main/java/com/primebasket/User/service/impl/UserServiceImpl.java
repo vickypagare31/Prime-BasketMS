@@ -100,4 +100,13 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
 
     }
+
+    @Override
+    public UserResponseDto fetchUserById(Long userId) {
+
+        User user= userRepository.findByUserIdAndIsActiveTrue(userId)
+                .orElseThrow(()->new UserNotFoundException("User not found with Id: "+userId));
+
+        return UserMapper.entityToDto(user);
+    }
 }

@@ -9,6 +9,7 @@ import com.primebasket.cart_service.exception.ResourceNotFoundException;
 import com.primebasket.cart_service.exception.ResourceNullException;
 import com.primebasket.cart_service.mapper.CartMapper;
 import com.primebasket.cart_service.repository.CartRepository;
+import com.primebasket.cart_service.service.CartDependencyService;
 import com.primebasket.cart_service.service.CartService;
 import lombok.RequiredArgsConstructor;
 
@@ -28,6 +29,8 @@ public class CartServiceImpl implements CartService {
     private final UserClient userClient;
     private final ProductClient productClient;
     private final CartMapper cartMapper;
+    private final CartDependencyService cartDependencyService;
+
     @Override
     public CartResponseDto addToCart(CartRequestDto requestDto) {
 
@@ -53,7 +56,7 @@ public class CartServiceImpl implements CartService {
         }
 
         //Validate User
-        UserResponseDto user=userClient.fetchUserById(requestDto.getUserId());
+        UserResponseDto user=cartDependencyService.getUser(requestDto.getUserId());
 
         if(user==null || !Boolean.TRUE.equals(user.getActive())){
             throw new ResourceNotFoundException("User not found with Id: "+requestDto.getUserId());
@@ -67,7 +70,7 @@ public class CartServiceImpl implements CartService {
 
         //Make one batch call
         //Product service should return only active products
-        List<ProductResponseDto>activeProducts=productClient.validateProducts(requestedProductIds);
+        List<ProductResponseDto>activeProducts=cartDependencyService.getActiveProducts(requestedProductIds);
 
         Set<Long>activeProductIds=activeProducts.stream()
                 .map(ProductResponseDto::getProductId)

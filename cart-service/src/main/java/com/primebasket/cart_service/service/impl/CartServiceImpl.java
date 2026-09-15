@@ -56,9 +56,9 @@ public class CartServiceImpl implements CartService {
         }
 
         //Validate User
-        UserResponseDto user=cartDependencyService.getUser(requestDto.getUserId());
+        UserStatusResponseDto user=cartDependencyService.getUser(requestDto.getUserId());
 
-        if(user==null || !Boolean.TRUE.equals(user.getActive())){
+        if(user==null || !Boolean.TRUE.equals(user.getIsActive())){
             throw new ResourceNotFoundException("User not found with Id: "+requestDto.getUserId());
         }
 

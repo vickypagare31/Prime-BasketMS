@@ -109,4 +109,12 @@ public class UserServiceImpl implements UserService {
 
         return UserMapper.entityToDto(user);
     }
+
+    @Override
+    public UserStatusResponseDto getUserStatus(Long userId) {
+        User user=userRepository.findById(userId)
+                .orElseThrow(()->new UserNotFoundException("User not found for this Id: "+userId));
+        return UserMapper.entToUserStatusResponseDto(user);
+    }
+
 }

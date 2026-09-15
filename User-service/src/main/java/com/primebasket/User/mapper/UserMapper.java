@@ -53,4 +53,14 @@ public class UserMapper {
         return user;
 
     }
+
+    public static UserStatusResponseDto entToUserStatusResponseDto(User user){
+
+        UserStatusResponseDto responseDto=new UserStatusResponseDto();
+
+        responseDto.setUserId(user.getUserId());
+        responseDto.setIsActive(user.getIsActive());
+        return responseDto;
+
+    }
 }

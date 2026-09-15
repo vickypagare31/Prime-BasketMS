@@ -4,6 +4,7 @@ import com.primebasket.cart_service.clients.ProductClient;
 import com.primebasket.cart_service.clients.UserClient;
 import com.primebasket.cart_service.dto.ProductResponseDto;
 import com.primebasket.cart_service.dto.UserResponseDto;
+import com.primebasket.cart_service.dto.UserStatusResponseDto;
 import com.primebasket.cart_service.exception.ServiceUnavailableException;
 import com.primebasket.cart_service.service.CartDependencyService;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
@@ -21,8 +22,8 @@ public class CartDependencyServiceImpl implements CartDependencyService {
 
     @Override
     @CircuitBreaker(name = "userService", fallbackMethod = "userServiceFallback")
-    public UserResponseDto getUser(Long userId) {
-        return userClient.fetchUserById(userId);
+    public UserStatusResponseDto getUser(Long userId) {
+        return userClient.getUserStatus(userId);
     }
 
     @Override
@@ -31,11 +32,11 @@ public class CartDependencyServiceImpl implements CartDependencyService {
         return productClient.validateProducts(productIds);
     }
 
-    public UserResponseDto userServiceFallback(Long userId, Throwable error){
-        throw new ServiceUnavailableException("User Service is temporarily unavailable. Please try again later");
+    public UserStatusResponseDto userServiceFallback(Long userId, Throwable error){
+        throw new ServiceUnavailableException("User Service is temporarily unavailable. Please try again shortly.");
     }
 
     public List<ProductResponseDto>productServiceFallback(Set<Long> productIds, Throwable error){
-        throw new ServiceUnavailableException("Product Service not available. Please try again later");
+        throw new ServiceUnavailableException("Product Service is temporarily unavailable. Please try again shortly.");
     }
 }

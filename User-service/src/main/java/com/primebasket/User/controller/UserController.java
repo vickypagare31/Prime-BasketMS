@@ -65,6 +65,11 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(userList);
     }
 
+    @GetMapping("/status/{userId}")
+    public ResponseEntity<UserStatusResponseDto>getUserStatus(@PathVariable Long userId){
+        return ResponseEntity.ok(userService.getUserStatus(userId));
+    }
+
 
 
 }

@@ -1,9 +1,6 @@
 package com.primebasket.User.service;
 
-import com.primebasket.User.dto.UserAddressResponseDto;
-import com.primebasket.User.dto.UserRequestDto;
-import com.primebasket.User.dto.UserResponseDto;
-import com.primebasket.User.dto.UserUpdateDto;
+import com.primebasket.User.dto.*;
 import org.springframework.data.domain.Page;
 
 public interface UserService {
@@ -17,5 +14,8 @@ public interface UserService {
         UserUpdateDto updateUserById(Long userId, UserUpdateDto userUpdateDto);
 
         void deleteUserById(Long userId);
+
         UserResponseDto fetchUserById(Long userId);
+
+        UserStatusResponseDto getUserStatus(Long userId);
 }

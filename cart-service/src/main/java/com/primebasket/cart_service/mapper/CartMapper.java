@@ -1,9 +1,6 @@
 package com.primebasket.cart_service.mapper;
 
-import com.primebasket.cart_service.dto.CartItemResponseDto;
-import com.primebasket.cart_service.dto.CartItemRequestDto;
-import com.primebasket.cart_service.dto.CartRequestDto;
-import com.primebasket.cart_service.dto.CartResponseDto;
+import com.primebasket.cart_service.dto.*;
 import com.primebasket.cart_service.entity.Cart;
 import com.primebasket.cart_service.entity.CartItem;
 import org.springframework.stereotype.Component;
@@ -34,6 +31,31 @@ public class CartMapper {
         }
         responseDto.setResponseDtoList(itemResponseDtoList);
         responseDto.setCreatedAt(cart.getCreatedAt());
+        //responseDto.setUpdatedAt(cart.getUpdatedAt());
+        return responseDto;
+
+    }
+
+    public static CartUpdateResponseDto entToCartUpdateResponseDto(Cart cart){
+
+        CartUpdateResponseDto responseDto=new CartUpdateResponseDto();
+
+        responseDto.setCartId(cart.getCartId());
+        responseDto.setUserId(cart.getUserId());
+
+        List<CartItemResponseDto>itemResponseDtoList=new ArrayList<>();
+        if(cart.getItems()!=null){
+            for(CartItem items: cart.getItems()){
+
+                CartItemResponseDto itemResponseDto= new CartItemResponseDto();
+
+                itemResponseDto.setCartItemId(items.getCartItemId());
+                itemResponseDto.setProductId(items.getProductId());
+                itemResponseDto.setQuantity(items.getQuantity());
+                itemResponseDtoList.add(itemResponseDto);
+            }
+        }
+        responseDto.setResponseDtoList(itemResponseDtoList);
         responseDto.setUpdatedAt(cart.getUpdatedAt());
         return responseDto;
 

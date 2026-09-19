@@ -12,7 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-public class CartResponseDto {
+public class CartUpdateResponseDto {
 
     private Long cartId;
 
@@ -20,6 +20,5 @@ public class CartResponseDto {
 
     private List<CartItemResponseDto> responseDtoList;
 
-    private LocalDateTime createdAt;
-
+    private LocalDateTime updatedAt;
 }

@@ -17,4 +17,7 @@ public interface ProductClient {
     @PostMapping("/api/v1/products/validate")
     List<ProductResponseDto>validateProducts(@RequestBody Set<Long> productIds);
 
+    @GetMapping("/api/v1/products/{productId}")
+    ProductResponseDto getProduct(@PathVariable("productId") Long productId);
+
 }

@@ -129,4 +129,36 @@ public class CartServiceImpl implements CartService {
         return CartMapper.entToDto(savedCart);
 
     }
+
+    @Override
+    public CartResponseDto getCartByUserId(Long userId) {
+
+
+        UserStatusResponseDto user=cartDependencyService.getUser(userId);
+
+        if(user==null || !Boolean.TRUE.equals(user.getIsActive())){
+            throw new ResourceNotFoundException("User not found with Id: "+userId);
+        }
+        Cart cart=cartRepository.findByUserId(userId).orElseThrow(()->
+                new ResourceNotFoundException("Cart not found for this Id: "+userId));
+
+        return CartMapper.entToDto(cart);
+    }
+
+    @Override
+    public CartUpdateResponseDto updateCartQuantity(Long userId, Long productId) {
+
+        //Validate user through user client
+        UserStatusResponseDto user=cartDependencyService.getUser(userId);
+
+        if(user==null || !Boolean.TRUE.equals(user.getIsActive())){
+            throw new ResourceNotFoundException("User not found with Id: "+userId);
+        }
+        //Validate products from product client
+        ProductResponseDto product=cartDependencyService.getProduct(productId);
+
+
+
+        return null;
+    }
 }

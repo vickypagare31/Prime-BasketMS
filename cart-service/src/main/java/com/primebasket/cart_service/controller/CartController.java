@@ -6,10 +6,7 @@ import com.primebasket.cart_service.service.CartService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,6 +19,11 @@ public class CartController {
     public ResponseEntity<CartResponseDto>addToCart( @RequestBody CartRequestDto requestDto){
         CartResponseDto responseDto=cartService.addToCart(requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
+    }
+
+    @GetMapping("/{userId}")
+    public ResponseEntity<CartResponseDto>getCartByUserId(@PathVariable Long userId){
+        return ResponseEntity.ok(cartService.getCartByUserId(userId));
     }
 
 }

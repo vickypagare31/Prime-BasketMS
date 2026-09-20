@@ -191,4 +191,43 @@ public class CartServiceImpl implements CartService {
 
         return CartMapper.entToCartUpdateResponseDto(savedCart);
     }
+
+    @Override
+    public void removeCartItem(Long userId, Long productId) {
+
+        if(userId==null){
+            throw new ResourceNotFoundException("User id must not be null.");
+        }
+
+        if(productId==null){
+            throw new ResourceNotFoundException("Product Id must not be null.");
+        }
+
+        //Validate user through user client
+        UserStatusResponseDto user=cartDependencyService.getUser(userId);
+
+        if(user==null || !Boolean.TRUE.equals(user.getIsActive())){
+            throw new ResourceNotFoundException("User not found with Id: "+userId);
+        }
+
+        Cart cart=cartRepository.findByUserId(userId)
+                .orElseThrow(()->new ResourceNotFoundException("Cart not found for this Id: "+userId));
+
+
+        CartItem cartItem=cart.getItems()
+                .stream()
+                .filter(item->item.getProductId().equals(productId))
+                .findFirst()
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Product not found in cart."));
+
+        //Validate products from product client
+        ProductResponseDto product=cartDependencyService.getProduct(productId);
+        if(product==null || !Boolean.TRUE.equals(product.getIsActive())){
+            throw new ResourceNotFoundException("Product not found for this Id: "+productId);
+        }
+
+        cart.getItems().remove(cartItem);
+        cartRepository.save(cart);
+    }
 }

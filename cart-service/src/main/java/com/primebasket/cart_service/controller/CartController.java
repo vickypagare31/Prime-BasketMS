@@ -2,6 +2,8 @@ package com.primebasket.cart_service.controller;
 
 import com.primebasket.cart_service.dto.CartRequestDto;
 import com.primebasket.cart_service.dto.CartResponseDto;
+import com.primebasket.cart_service.dto.CartUpdateQuantityRequestDto;
+import com.primebasket.cart_service.dto.CartUpdateResponseDto;
 import com.primebasket.cart_service.service.CartService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -24,6 +26,14 @@ public class CartController {
     @GetMapping("/{userId}")
     public ResponseEntity<CartResponseDto>getCartByUserId(@PathVariable Long userId){
         return ResponseEntity.ok(cartService.getCartByUserId(userId));
+    }
+
+    @PatchMapping("/{userId}/items/{productId}")
+    public ResponseEntity<CartUpdateResponseDto>updateCartQuantity(@PathVariable Long userId,
+                                                                   @PathVariable Long productId,
+                                                                   @RequestBody CartUpdateQuantityRequestDto requestDto){
+
+        return ResponseEntity.ok(cartService.updateCartQuantity(userId, productId, requestDto));
     }
 
 }

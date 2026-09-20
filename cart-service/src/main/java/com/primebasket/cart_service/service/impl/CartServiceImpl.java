@@ -146,7 +146,19 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public CartUpdateResponseDto updateCartQuantity(Long userId, Long productId) {
+    public CartUpdateResponseDto updateCartQuantity(Long userId, Long productId, CartUpdateQuantityRequestDto requestDto) {
+
+        if(userId==null){
+            throw new ResourceNotFoundException("User id must not be null.");
+        }
+
+        if(productId==null){
+            throw new ResourceNotFoundException("Product Id must not be null.");
+        }
+
+        if(requestDto.getQuantity()==null || requestDto.getQuantity()<=0){
+            throw new ResourceNullException("Quantity not be null or must be greater than 0");
+        }
 
         //Validate user through user client
         UserStatusResponseDto user=cartDependencyService.getUser(userId);
@@ -154,11 +166,29 @@ public class CartServiceImpl implements CartService {
         if(user==null || !Boolean.TRUE.equals(user.getIsActive())){
             throw new ResourceNotFoundException("User not found with Id: "+userId);
         }
+
+        Cart cart=cartRepository.findByUserId(userId)
+                .orElseThrow(()->new ResourceNotFoundException("Cart not found for this Id: "+userId));
+
+
+        CartItem cartItem=cart.getItems()
+                .stream()
+                .filter(item->item.getProductId().equals(productId))
+                .findFirst()
+                .orElseThrow(() ->
+                new ResourceNotFoundException("Product not found in cart."));
+
         //Validate products from product client
         ProductResponseDto product=cartDependencyService.getProduct(productId);
+        if(product==null || !Boolean.TRUE.equals(product.getIsActive())){
+            throw new ResourceNotFoundException("Product not found for this Id: "+productId);
+        }
 
 
+        cartItem.setQuantity(requestDto.getQuantity());
 
-        return null;
+        Cart savedCart=cartRepository.save(cart);
+
+        return CartMapper.entToCartUpdateResponseDto(savedCart);
     }
 }

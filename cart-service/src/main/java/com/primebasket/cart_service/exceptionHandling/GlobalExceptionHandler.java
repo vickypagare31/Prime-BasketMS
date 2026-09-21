@@ -1,5 +1,6 @@
 package com.primebasket.cart_service.exceptionHandling;
 
+import com.primebasket.cart_service.exception.CartEmptyException;
 import com.primebasket.cart_service.exception.ResourceNotFoundException;
 import com.primebasket.cart_service.exception.ResourceNullException;
 import com.primebasket.cart_service.exception.ServiceUnavailableException;
@@ -24,5 +25,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ServiceUnavailableException.class)
     public ResponseEntity<String>handleServiceUnavailableException(Exception ex){
         return new ResponseEntity<>(ex.getMessage(),HttpStatus.SERVICE_UNAVAILABLE);
+    }
+
+    @ExceptionHandler(CartEmptyException.class)
+    public ResponseEntity<String>handleCartEmptyException(Exception ex){
+        return new ResponseEntity<>(ex.getMessage(),HttpStatus.NO_CONTENT);
     }
 }

@@ -5,6 +5,7 @@ import com.primebasket.cart_service.clients.UserClient;
 import com.primebasket.cart_service.dto.*;
 import com.primebasket.cart_service.entity.Cart;
 import com.primebasket.cart_service.entity.CartItem;
+import com.primebasket.cart_service.exception.CartEmptyException;
 import com.primebasket.cart_service.exception.ResourceNotFoundException;
 import com.primebasket.cart_service.exception.ResourceNullException;
 import com.primebasket.cart_service.mapper.CartMapper;
@@ -229,5 +230,63 @@ public class CartServiceImpl implements CartService {
 
         cart.getItems().remove(cartItem);
         cartRepository.save(cart);
+    }
+
+    @Override
+    public void clearCart(Long userId) {
+
+        if(userId==null){
+            throw new ResourceNotFoundException("User id must not be null.");
+        }
+
+        //Validate User
+        UserStatusResponseDto user=cartDependencyService.getUser(userId);
+
+        if(user==null || !Boolean.TRUE.equals(user.getIsActive())){
+            throw new ResourceNotFoundException("User not found with Id: "+userId);
+        }
+
+        Cart cart=cartRepository.findByUserId(userId)
+                .orElseThrow(()->new ResourceNotFoundException("Cart not found for this Id: "+userId));
+
+        cart.getItems().clear();
+        cartRepository.save(cart);
+    }
+
+    @Override
+    public CartResponseDto validateCart(Long userId) {
+
+        if(userId==null){
+            throw new ResourceNotFoundException("User id must not be null.");
+        }
+
+        //Validate User
+        UserStatusResponseDto user=cartDependencyService.getUser(userId);
+
+        if(user==null || !Boolean.TRUE.equals(user.getIsActive())){
+            throw new ResourceNotFoundException("User not found with Id: "+userId);
+        }
+
+        Cart cart=cartRepository.findByUserId(userId)
+                .orElseThrow(()->new ResourceNotFoundException("Cart not found for this Id: "+userId));
+
+        if(cart.getItems()==null || cart.getItems().isEmpty()){
+            throw new CartEmptyException("Cart is empty.");
+        }
+        for(CartItem cartItem: cart.getItems()){
+
+            //Validate Quantity
+            if(cartItem.getQuantity()==null || cartItem.getQuantity()<=0){
+                throw new ResourceNullException("Invalid quantity for product: "+cartItem.getProductId());
+            }
+
+            //Validate products from product client
+            ProductResponseDto product=cartDependencyService.getProduct(cartItem.getProductId());
+            if(product==null || !Boolean.TRUE.equals(product.getIsActive())){
+                throw new ResourceNotFoundException("Product not found for this Id: "+cartItem.getProductId());
+            }
+        }
+
+        return CartMapper.entToDto(cart);
     }
 }

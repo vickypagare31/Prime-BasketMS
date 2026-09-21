@@ -42,5 +42,14 @@ public class CartController {
         cartService.removeCartItem(userId, productId);
         return ResponseEntity.noContent().build();
     }
+    @DeleteMapping("/{userId}/items")
+    public ResponseEntity<Void>clearCart(@PathVariable Long userId){
+        cartService.clearCart(userId);
+        return ResponseEntity.noContent().build();
+    }
 
+    @GetMapping("/validate/{userId}")
+    public ResponseEntity<CartResponseDto>validateCart(@PathVariable Long userId){
+        return ResponseEntity.ok(cartService.validateCart(userId));
+    }
 }

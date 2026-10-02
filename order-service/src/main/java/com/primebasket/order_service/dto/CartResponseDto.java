@@ -1,6 +1,5 @@
 package com.primebasket.order_service.dto;
 
-import com.primebasket.cart_service.dto.CartItemResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,7 +18,7 @@ public class CartResponseDto {
 
     private Long userId;
 
-    private List<CartItemResponseDto> responseDtoList;
+    private List<CartItemResponseDto> cartItems;
 
     private LocalDateTime createdAt;
 

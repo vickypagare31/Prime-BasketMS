@@ -3,6 +3,7 @@ package com.primebasket.inventory_service.service.impl;
 import com.primebasket.inventory_service.dto.InventoryRequestDto;
 import com.primebasket.inventory_service.dto.InventoryResponseDto;
 import com.primebasket.inventory_service.dto.InventoryUpdateResponseDto;
+import com.primebasket.inventory_service.dto.StockQuantityRequestDto;
 import com.primebasket.inventory_service.entity.Inventory;
 import com.primebasket.inventory_service.exception.InvalidQuantityException;
 import com.primebasket.inventory_service.exception.InventoryAlreadyExistsException;
@@ -47,7 +48,7 @@ public class InventoryServiceImpl implements InventoryService {
     }
 
     @Override
-    public InventoryUpdateResponseDto updateStock(Long productId, InventoryRequestDto requestDto) {
+    public InventoryUpdateResponseDto updateStock(Long productId, StockQuantityRequestDto requestDto) {
 
         Inventory inventory=inventoryRepository.findByProductId(productId)
                 .orElseThrow(()->new ResourceNotFoundException(
@@ -67,7 +68,7 @@ public class InventoryServiceImpl implements InventoryService {
 
     @Transactional
     @Override
-    public InventoryUpdateResponseDto deductStock(Long productId, InventoryRequestDto requestDto) {
+    public InventoryUpdateResponseDto deductStock(Long productId, StockQuantityRequestDto requestDto) {
 
         Inventory inventory=inventoryRepository.findByProductId(productId)
                 .orElseThrow(()->new ResourceNotFoundException("Inventory not found for this productId: "+productId));
@@ -88,7 +89,7 @@ public class InventoryServiceImpl implements InventoryService {
 
     @Transactional
     @Override
-    public InventoryUpdateResponseDto reserveStock(Long productId, InventoryRequestDto requestDto) {
+    public InventoryUpdateResponseDto reserveStock(Long productId, StockQuantityRequestDto requestDto) {
 
         Inventory inventory=inventoryRepository.findByProductId(productId)
                 .orElseThrow(()->new ResourceNotFoundException("Inventory not found for this productId: "+productId));
@@ -118,7 +119,7 @@ public class InventoryServiceImpl implements InventoryService {
     }
 
     @Override
-    public InventoryUpdateResponseDto releaseReservedStock(Long productId, InventoryRequestDto requestDto) {
+    public InventoryUpdateResponseDto releaseReservedStock(Long productId, StockQuantityRequestDto requestDto) {
 
         Inventory inventory=inventoryRepository.findByProductId(productId)
                 .orElseThrow(()->new ResourceNotFoundException("Inventory not found for this productId: "+productId));
@@ -141,7 +142,7 @@ public class InventoryServiceImpl implements InventoryService {
 
     @Transactional
     @Override
-    public InventoryUpdateResponseDto confirmReservedStock(Long productId, InventoryRequestDto requestDto) {
+    public InventoryUpdateResponseDto confirmReservedStock(Long productId, StockQuantityRequestDto requestDto) {
 
         Inventory inventory=inventoryRepository.findByProductId(productId)
                 .orElseThrow(()->new ResourceNotFoundException("Inventory not found for this productId: "+productId));

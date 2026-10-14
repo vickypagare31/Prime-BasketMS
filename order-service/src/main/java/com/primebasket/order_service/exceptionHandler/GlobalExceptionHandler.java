@@ -1,5 +1,6 @@
 package com.primebasket.order_service.exceptionHandler;
 
+import com.primebasket.order_service.exception.InvalidQuantityException;
 import com.primebasket.order_service.exception.ResourceNotFoundException;
 import com.primebasket.order_service.exception.ResourceNullException;
 import com.primebasket.order_service.exception.ServiceUnavailableException;
@@ -23,6 +24,11 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ResourceNullException.class)
     public ResponseEntity<String>handleResourceNullException(Exception ex){
+        return new ResponseEntity<>(ex.getMessage(),HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(InvalidQuantityException.class)
+    public ResponseEntity<String>handleInvalidQuantityException(Exception ex){
         return new ResponseEntity<>(ex.getMessage(),HttpStatus.BAD_REQUEST);
     }
 }

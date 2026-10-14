@@ -14,4 +14,5 @@ public interface CartDependencyService {
     List<ProductResponseDto>getActiveProducts(Set<Long> productIds);
 
     ProductResponseDto getProduct(@PathVariable("productId") Long productId);
+
 }

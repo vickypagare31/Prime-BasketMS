@@ -7,6 +7,7 @@ import com.primebasket.order_service.enums.OrderStatus;
 import com.primebasket.order_service.exception.ResourceNotFoundException;
 import com.primebasket.order_service.exception.ResourceNullException;
 import com.primebasket.order_service.mapper.OrderMapper;
+import com.primebasket.order_service.repository.OrderRepository;
 import com.primebasket.order_service.service.OrderDependencyService;
 import com.primebasket.order_service.service.OrderService;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,8 @@ import java.util.List;
 public class OrderServiceImpl implements OrderService {
     private final OrderDependencyService orderDependencyService;
     private final OrderMapper orderMapper;
+    private final OrderRepository orderRepository;
+
     @Override
     public OrderResponseDto createOrder(OrderRequestDto requestDto) {
 
@@ -32,7 +35,7 @@ public class OrderServiceImpl implements OrderService {
 
         CartResponseDto cart=orderDependencyService.getCartByUserId(requestDto.getUserId());
 
-        if(cart.getCartItems()==null || cart.getCartItems().isEmpty()){
+        if(cart==null || cart.getCartItems()==null || cart.getCartItems().isEmpty()){
             throw new ResourceNullException("Cart is empty.");
         }
 
@@ -73,6 +76,7 @@ public class OrderServiceImpl implements OrderService {
 
         }
         order.setOrderItems(orderItemsList);
+        order.setTotalAmount(totalAmount);
 
         List<OrderItem>successfullyReserveItems=new ArrayList<>();
 
@@ -85,20 +89,27 @@ public class OrderServiceImpl implements OrderService {
 
                 successfullyReserveItems.add(item);
             }
+
+            Order savedOrder = orderRepository.saveAndFlush(order);
+
+            return OrderMapper.entToDto(order);
         }
+        //Outer catch is for handle reserveStock error
+        // Where as inner catch handles failures while releasing previously reserved stock
         catch (Exception ex){
             for (OrderItem reservedItem: successfullyReserveItems){
-                orderDependencyService.releaseReservedStock(reservedItem.getProductId(),
-                        new StockQuantityRequestDto(reservedItem.getQuantity()));
+
+                try {
+
+                    orderDependencyService.releaseReservedStock(reservedItem.getProductId(),
+                            new StockQuantityRequestDto(reservedItem.getQuantity()));
+
+                } catch (Exception releaseEx) {
+                    ex.addSuppressed(releaseEx);
+                }
             }
             throw  ex;
         }
 
-
-
-
-
-
-        return null;
     }
 }
